@@ -12,6 +12,7 @@ RUN apt-get update && \
         build-essential \
         python3-dev \
         ruby \
+        open3d==0.11.2 \
         && \
     curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
     echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \

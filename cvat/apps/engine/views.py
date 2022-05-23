@@ -433,6 +433,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             # with open(input_path,'r') as f:
             for filename in os.listdir(input_path):
                 if filename.endswith(".h5"):
+                    counter=0
+
                     fn = filename.split(".h5")[0]
                     filename = os.path.join(input_path, filename)
                     hdf = h5py.File(filename, 'r')
@@ -448,6 +450,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     output_list = []
                     signid = 1
                     # projectid=1234
+
+                    eight_signs=["Group/Supplementary Signs NOT containing pictures  /Suppl_Restriction_Tex_gunea/image",
+                     "Group/Supplementary Signs NOT containing pictures  /Suppl_Restriction_Tex_Sone/image",
+                     "Group/No Overtaking/No_Passing_BackSlash_Offset_45Deg/image",
+                     "Group/Supplementary signs containing CHN,JPN,KOR scripts/Suppl_Explanation_Tex_xianzhisudu/image",
+                     "Group/Supplementary signs containing TexRegExp/Suppl_Restriction_Tex_chukou_Tex_xiansu/image",
+                     "Group/Supplementary signs containing CHN,JPN,KOR scripts/Suppl_Restriction_Tex_chukou_Tex_exit/image",
+                     "Group/ROOT/Other_Triangular_Sign/image",
+                     "Group/Rectangular signs/City_End_White_Back_Slash/image"]
 
                     for list_name in res:
                         dict_val = {}
@@ -474,7 +485,48 @@ class ProjectViewSet(viewsets.ModelViewSet):
                                     except:
                                         continue
                                 if (val[-6:]) == "/image":
-                                    array = hdf[val][:]
+                                    #print(val)
+                                    if val in eight_signs:
+                                        print("yes")
+                                        array = hdf[val][:]
+                                        img = PIL.Image.open(io.BytesIO(array))
+                                        img_cv2 = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
+                                        imS = cv2.resize(img_cv2, (100,100)) 
+                                        kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+                                        im = cv2.filter2D(imS, -1, kernel)       
+                                        filepath=os.path.join(output_path, list_filenames[1])
+                                    #imagename=re.sub('[^A-Za-z0-9]+', '', list_filenames[2])
+                                        if not os.path.exists(filepath):
+                                            os.mkdir(filepath)
+                                        cv2.imwrite(os.path.join(filepath, str(counter)+".jpg"), im, [cv2.IMWRITE_JPEG_QUALITY, 100])
+                                    else:   
+                                        array = hdf[val][:]
+                                        img = PIL.Image.open(io.BytesIO(array))
+                                        #img.show()
+                                        img = img.resize((100,100))
+                                        img = img.convert('RGB')
+                                    
+                                    #img.save(Copy_to_path+filename+'.jpeg')
+                                    #img_cv2 = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
+                                    #cv2.imshow("hi", img_cv2)
+                                    #cv2.waitKey(0) 
+                                    #cv2.destroyAllWindows() 
+                                # break
+                                ## print(img_cv2.shape)
+                                    #imS = cv2.resize(img_cv2, (100,100)) 
+                                    
+                                    #kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+                                    #im = cv2.filter2D(imS, -1, kernel)
+                                    
+                                        filepath=os.path.join(output_path, list_filenames[1])
+                                        #imagename=re.sub('[^A-Za-z0-9]+', '', list_filenames[2])
+                                        if not os.path.exists(filepath):
+                                            os.mkdir(filepath)
+                                        
+                                        img.save(os.path.join(filepath, str(counter)+".jpg"))
+                                    #cv2.imwrite(os.path.join(filepath, str(counter)+".jpg"), imS, [cv2.IMWRITE_JPEG_QUALITY, 100])
+
+                                    '''array = hdf[val][:]
                                     img = PIL.Image.open(io.BytesIO(array))
                                     img_cv2 = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
                                     imS = cv2.resize(img_cv2, (200, 200))
@@ -484,7 +536,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
                                     filepath = os.path.join(output_path, list_filenames[1])
                                     if not os.path.exists(filepath):
                                         os.mkdir(filepath)
-                                    cv2.imwrite(os.path.join(filepath, list_filenames[2] + ".jpg"), im, [cv2.IMWRITE_JPEG_QUALITY, 100])
+                                    cv2.imwrite(os.path.join(filepath, list_filenames[2] + ".jpg"), im, [cv2.IMWRITE_JPEG_QUALITY, 100])'''
+                                
+                                
+                                
                                 if (val[-15:]) == "/label_mode_dev":
                                     label_mode_dev = hdf[val][()]
                                 if (val[-15:]) == "/label_mode_eva":
@@ -501,7 +556,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                                     else:
                                         dict_val["group_image"] = "None"
                                     if len([x for x in list_name if x.endswith('/image')]) > 0:
-                                        dict_val["imagepath"] = filepath + "\\" + list_filenames[2] + ".jpg"
+                                        dict_val["imagepath"] = filepath + "/" + str(counter) + ".jpg"
                                     else:
                                         dict_val["imagepath"] = "None"
                                     dict_val["description"] = description
@@ -530,6 +585,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
                                     output_list.append(dict_val)
                                     signid = signid + 1
+                                    counter=int(counter)+1
             # lableschema
 
             fs = FileSystemStorage(_ddir)

@@ -79,7 +79,7 @@ def _save_task_to_db(db_task):
     job = rq.get_current_job()
     job.meta['status'] = 'Task is being saved in database'
     job.save_meta()
-
+    create_extra_job = db_task.segment_size
     segment_size = db_task.segment_size
     segment_step = segment_size
     if segment_size == 0 or segment_size > db_task.data.size:
@@ -112,6 +112,15 @@ def _save_task_to_db(db_task):
         db_job = models.Job(segment=db_segment)
         db_job.save()
 
+    if create_extra_job > 0:
+        db_segment = models.Segment()
+        db_segment.task = db_task
+        db_segment.start_frame = 0
+        stop_size = db_task.data.size - 1
+        db_segment.stop_frame = stop_size
+        db_segment.save()
+        db_job = models.Job(segment=db_segment)
+        db_job.save()
 
     db_task.data.save()
     db_task.save()

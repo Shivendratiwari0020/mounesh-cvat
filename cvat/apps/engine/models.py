@@ -280,7 +280,8 @@ class Catlog(models.Model):
     signname = models.CharField(max_length=2000, blank=True)
     projectid = models.IntegerField()
     imagepath = models.CharField(max_length=2000, blank=True)
-    description = models.CharField(max_length=2000, blank=True)
+    # description = models.CharField(max_length=2000, blank=True)
+    description = models.TextField()
     group_image = models.CharField(max_length=2000, blank=True)
     label_mode_dev = models.CharField(max_length=2000, blank=True)
     label_mode_eva = models.CharField(max_length=2000, blank=True)
@@ -311,7 +312,7 @@ class Task(models.Model):
     bug_tracker = models.CharField(max_length=2000, blank=True, default="")
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    overlap = models.PositiveIntegerField(null=True)
+    overlap = models.PositiveIntegerField(default=0,null=True)
     # Zero means that there are no limits (default)
     segment_size = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=32, choices=StatusChoice.choices(),
