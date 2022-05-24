@@ -24,19 +24,14 @@ class output_conversion_cls:
                 timestamp = keys[2:]
 
                 timestamp = [i.split("/")[2] for i in timestamp]
-                #print("hhhhhhhhhhhhhhhhhhhhhhhhh",len(timestamp))
                 frame_numbers = list(range(1, len(timestamp)+1))
-                #print(len(frame_numbers))
                 frame_timestamp_dict = {frame_numbers1:timestamp1 for timestamp1,frame_numbers1 in zip(timestamp,frame_numbers)}
-                #print("lastttttttttttttttttt", frame_timestamp_dict.keys())
 
         #print(devicename,channelname,frame_timestamp_dict)
         return devicename,channelname,frame_timestamp_dict
 
     def output_conversion_objectlabel(self, labelfile_input_path, input_h5_file, task_name, login_name):
         devicename,channelname,frame_timestamp_dict=occ.h5_extract_start(input_h5_file)
-
-        #devicename="MFC5xx"
 
         f = open(labelfile_input_path)
         data = json.load(f)
@@ -64,7 +59,7 @@ class output_conversion_cls:
         #data = json.load(f)
 
         #df = pd.DataFrame(data["annotations"])
-        df_objectlabels=df_objectlabels.drop(['segmentation', 'area', 'iscrowd'], axis = 1)
+        df_objectlabels=df_objectlabels.drop(['segmentation', 'area', 'iscrowd'], axis = 1, errors='ignore')
 
         ObjectLabels=[]
 
@@ -72,8 +67,7 @@ class output_conversion_cls:
         col_one_list=set(col_one_list)
         col_one_list=list(col_one_list)
 
-        trackid=0
-
+        trackid_shape=100000
 
         for img_id in col_one_list:
             ObjectLabels_dict={}
@@ -113,12 +107,22 @@ class output_conversion_cls:
 
 
                 attributes=dict_df_img_id_list["attributes"]
-                #if "track_id" in attributes:
-                    #trackid=attributes["track_id"]
-                #else:
-                    #trackid=-1
 
-                trackid=trackid+1
+                #if "track_id" in attributes:
+                #    trackid=attributes["track_id"]
+                #else:
+                 #   trackid=-1
+
+
+                if "track_id" in attributes:
+                    trackid=attributes["track_id"]
+                    #print("--------------------trackkid", trackid)
+                else:
+                    trackid_shape=trackid_shape+1
+                    trackid=trackid_shape+1
+                   # print("...............else", trackid)
+                #trackid=trackid+1
+
 
                 rem_list = ['occluded', 'rotation', 'keyframe', "track_id"]
                 attributes = {key: attributes[key] for key in attributes if key not in rem_list}
@@ -160,7 +164,7 @@ class output_conversion_cls:
         Channels_dict["ObjectLabels"]=ObjectLabels
         Channels.append(Channels_dict)
 
-        Devices_dict["DeviceName"]=devicename  ##STATIC
+        Devices_dict["DeviceName"]="MFC520"  ##STATIC
         Devices_dict["Channels"]=Channels
         Devices.append(Devices_dict)
 
@@ -230,7 +234,7 @@ class output_conversion_cls:
 
 
 
-        df_scenelabel=df_scenelabel.drop(['segmentation', 'area', 'iscrowd','bbox', 'category_id','index'], axis = 1)
+        df_scenelabel=df_scenelabel.drop(['segmentation', 'area', 'iscrowd','bbox', 'category_id','index'], axis = 1, errors='ignore')
 
 
         Labels=[]
@@ -254,7 +258,7 @@ class output_conversion_cls:
 
         d_f=d_f.reset_index()
         df_new=df_scenelabel.join(d_f)
-        df_filter=df_new.drop(['attributes', 'occluded', 'rotation','id', 'index', 'keyframe', 'track_id'], axis = 1, errors='ignore') 
+        df_filter=df_new.drop(['attributes', 'occluded', 'rotation','id', 'index','keyframe','track_id'], axis = 1, errors='ignore')
 
         columns_list=list(df_filter.columns)
         columns_list.remove("image_id")
@@ -331,7 +335,6 @@ class output_conversion_cls:
         output_write_file = input_h5_file+"SR_SceneLabels.json"
         with open(output_write_file, "w") as f:
            f.write(main_json)
-
 
 
 
