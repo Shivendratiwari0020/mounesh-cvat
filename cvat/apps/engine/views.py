@@ -642,6 +642,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             label_list=label_list.replace("Values","values")
             label_list=label_list.replace("Type", "input_type")
             label_list=label_list.replace("ComboBox","select")
+            label_list=label_list.replace("TextEditor", "text")
             label_list=label_list.replace(" \"values\": []"," \"values\": [\"\"]")
             label_list=label_list.replace("\"attributes\": [{","\"attributes\": [{\"name\":")
             label_list=label_list.replace("}}, {","},{ \"name\":")

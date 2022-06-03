@@ -27,6 +27,9 @@ const Signs: React.FC<Props> = ({ attrid,clientID }: Props) => {
   const [description, setDescription] = useState("");
   const [imgattr, setImgattr] = useState("");
   const [imgname, setImgname] = useState("");
+  const [signattr, setSignsattr] = useState("");
+
+
   const currentJob = useSelector((state) => state);
   useEffect(() => {
     serverProxy.jobs
@@ -71,6 +74,7 @@ const Signs: React.FC<Props> = ({ attrid,clientID }: Props) => {
               setDescription(value.description),
                 setImgattr(value.imagepath),
                 setImgname(value.signname);
+                setSignsattr(value.label_mode_dev.substr(2).replace("'",""))
             }}
             className="signs"
           />
@@ -280,10 +284,10 @@ const Signs: React.FC<Props> = ({ attrid,clientID }: Props) => {
                               <Button
                                 style={{
                                   marginBottom: "2px",
-                                  backgroundColor: "green",
+                                  backgroundColor: "white",
                                 }}
                               >
-                                Full
+                                {signattr}
                               </Button>
                               <Button
                                 style={{ marginBottom: "2px" }}
