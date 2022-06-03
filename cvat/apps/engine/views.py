@@ -1731,7 +1731,8 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.action == 'list':
-            perm = UserPermission(self.request, self)
+            # perm = UserPermission(self.request, self)
+            perm = UserPermission.create_scope_list(self.request)
             queryset = perm.filter(queryset)
 
         return queryset
