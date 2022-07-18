@@ -23,6 +23,7 @@ import { ObjectType, ShapeType } from 'reducers/interfaces';
 import {
     ObjectOutsideIcon, FirstIcon, LastIcon, PreviousIcon, NextIcon,
 } from 'icons';
+import Corrector from './LableGenerator/Corrector';
 
 interface Props {
     readonly: boolean;
@@ -305,6 +306,9 @@ function ItemButtonsComponent(props: Props): JSX.Element {
         <Row align='middle' justify='space-around'>
             <Col span={20} style={{ textAlign: 'center' }}>
                 <Row justify='space-around'>
+                    {/* <Col>
+                        <Corrector />
+                    </Col> */}
                     <Col>
                         <SwitchLock {...props} />
                     </Col>

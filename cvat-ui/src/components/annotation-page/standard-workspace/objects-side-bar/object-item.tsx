@@ -8,6 +8,7 @@ import ObjectButtonsContainer from 'containers/annotation-page/standard-workspac
 import { ObjectType, ShapeType, ColorBy } from 'reducers/interfaces';
 import ItemDetails, { attrValuesAreEqual } from './object-item-details';
 import ItemBasics from './object-item-basics';
+import Corrector from './LableGenerator/Corrector';
 
 interface Props {
     normalizedKeyMap: Record<string, string>;
@@ -111,7 +112,7 @@ function ObjectItemComponent(props: Props): JSX.Element {
                 id={`cvat-objects-sidebar-state-item-${clientID}`}
                 className={className}
                 style={{ backgroundColor: `${color}88` }}
-            >
+            >                 
                 <ItemBasics
                     jobInstance={jobInstance}
                     readonly={readonly}
@@ -146,9 +147,11 @@ function ObjectItemComponent(props: Props): JSX.Element {
                 <ObjectButtonsContainer readonly={readonly} clientID={clientID} />
                 {!!attributes.length && (
                     <ItemDetails
+                        jobInstance={jobInstance}
                         readonly={readonly}
                         collapsed={collapsed}
                         clientID={clientID}
+                        AnnotationId={serverID}
                         attributes={attributes}
                         values={attrValues}
                         collapse={collapse}

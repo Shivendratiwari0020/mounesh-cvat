@@ -7,11 +7,14 @@ import { Row } from 'antd/lib/grid';
 import Collapse from 'antd/lib/collapse';
 
 import ItemAttribute from './object-item-attribute';
+import Corrector from './LableGenerator/Corrector';
 
 interface Props {
     readonly: boolean;
     collapsed: boolean;
     clientID: number;
+    AnnotationId: number | undefined;
+    jobInstance: any;
     attributes: any[];
     values: Record<number, string>;
     changeAttribute(attrID: number, value: string): void;
@@ -39,11 +42,12 @@ function attrAreTheSame(prevProps: Props, nextProps: Props): boolean {
 
 function ItemAttributesComponent(props: Props): JSX.Element {
     const {
-        collapsed, attributes, values, readonly, changeAttribute, collapse,clientID,
+        AnnotationId, jobInstance, collapsed, attributes, values, readonly, changeAttribute, collapse,clientID,
     } = props;
 
     return (
         <Row>
+            <Corrector AnnotationId={AnnotationId} attributes={attributes}/>
             <Collapse
                 className='cvat-objects-sidebar-state-item-collapse'
                 activeKey={collapsed ? [] : ['details']}
@@ -59,15 +63,17 @@ function ItemAttributesComponent(props: Props): JSX.Element {
                                 className='cvat-object-item-attribute-wrapper'
                             >
                                 <ItemAttribute
+                                    jobInstance={jobInstance}
                                     readonly={readonly}
                                     clientID={clientID}
+                                    AnnotationId={AnnotationId}
                                     attrValue={values[attribute.id]}
                                     attrInputType={attribute.inputType}
                                     attrName={attribute.name}
                                     attrID={attribute.id}
                                     attrValues={attribute.values}
-                                    changeAttribute={changeAttribute}
-                                />
+                                    changeAttribute={changeAttribute}                                   
+                                />                               
                             </Row>
                         ),
                     )}

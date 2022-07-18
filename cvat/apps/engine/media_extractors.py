@@ -356,7 +356,7 @@ def converter_decorator(fn):
                 converter_webm(source_path[0])
             except:
                 pass
-            new_path = source_path[0].split(".h5")[0]+".webM"
+            new_path = source_path[0].split(".h5")[0]+".mp4"
             kwargs.pop("sorting_method")
             kwargs.update({"source_path":[new_path]})
             return fn(**kwargs)

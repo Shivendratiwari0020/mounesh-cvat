@@ -62,6 +62,7 @@ function ObjectsSideBar(props: StateToProps & DispatchToProps & OwnProps): JSX.E
     const {
         sidebarCollapsed, canvasInstance, collapseSidebar, objectsList, jobInstance,
     } = props;
+console.log('objectsList', objectsList)
 
     const collapse = (): void => {
         const [collapser] = window.document.getElementsByClassName('cvat-objects-sidebar');

@@ -68,6 +68,32 @@ class AttributeSerializer(serializers.ModelSerializer):
             attribute = instance
 
         return attribute
+        
+class AdditionalProjectInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdditionalProjectInfo
+        fields = ('corrector_schema', )
+        # fields = '__all__'
+
+
+class SaveTrackSerializer(serializers.Serializer):
+    job_id = serializers.IntegerField(required=False)
+    # trackid = serializers.IntegerField(required=False)
+    start_frame = serializers.IntegerField(required=False)
+    end_frame = serializers.IntegerField()
+    AnnotationId = serializers.CharField(max_length=64)
+    attribute_id = serializers.IntegerField()
+    attribute_name = serializers.CharField(max_length=64)
+    attribute_previous_val = serializers.CharField(max_length=64)
+    attribute_val = serializers.CharField(max_length=64)
+
+
+class LabelSaveSerializer(serializers.Serializer):
+    attribute_id = serializers.IntegerField(required=False)
+    AnnotationId = serializers.IntegerField(required=False)
+    frame = serializers.IntegerField(required=False)
+    attribute_name = serializers.CharField(max_length=64)
+    attribute_val = serializers.CharField(max_length=64)
 
 class LabelSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)

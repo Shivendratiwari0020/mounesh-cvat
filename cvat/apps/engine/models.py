@@ -424,6 +424,10 @@ class Job(models.Model):
         project = self.segment.task.project
         return project.id if project else None
 
+    def get_task_id(self):
+        task = self.segment.task
+        return task.id if task else None
+
     def get_bug_tracker(self):
         task = self.segment.task
         project = task.project
@@ -528,6 +532,19 @@ class Annotation(models.Model):
 
     class Meta:
         abstract = True
+        default_permissions = ()
+
+class AdditionalProjectInfo(models.Model):
+    """
+        added model to store details about corrector schema and lable mode eva/dev 
+    """
+    
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project_type = models.CharField(max_length=20)
+    label_mode = models.CharField(max_length=20)    
+    corrector_schema = models.JSONField()
+
+    class Meta:
         default_permissions = ()
 
 class Commit(models.Model):

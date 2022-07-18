@@ -140,7 +140,7 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
                         type='link'
                         onClick={(e: React.MouseEvent): void => {
                             e.preventDefault();
-                            push(`/tasks/${taskId}/jobs/${id}`);
+                            push(`/tasks/${taskId}/jobs/${id}`);    
                         }}
                         href={`/tasks/${taskId}/jobs/${id}`}
                     >

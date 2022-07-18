@@ -733,6 +733,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
                     a=1
+                    
                     attr_create=models.AttributeSpec(
                                         label_id=labels_create.id,
                                         name =i["name"],

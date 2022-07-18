@@ -1783,6 +1783,44 @@
                 }
             }
 
+            // to get option in label corrector
+            async function getCorrectorData(id) {
+                const { backendAPI } = config;
+                let response = null;
+                try {
+                    response = await Axios.get(`${backendAPI}/project-additional-info/${id}`,{
+                        //response = await Axios.get(`http://localhost:8019/first?pid=${id}`,{
+                      proxy: config.proxy,
+
+                    });
+                }   catch (errorData) {
+                    throw generateError(errorData);
+                }
+                return response.data;
+            } 
+
+            // label corrector images 
+               // get project type/mode
+               async function labelCorrectorImages(id,track_id) {
+                console.log("track_id", track_id)
+                const { backendAPI } = config;
+                let response = null;
+                try {
+                    response = await Axios.get(`${backendAPI}/get-tracked-frame-info/${id}/frame_data?track_id=${track_id}`,{
+                        //response = await Axios.get(`http://localhost:8019/first?pid=${id}`,{
+                      proxy: config.proxy,
+
+                    });
+
+                }    catch (errorData) {
+                    throw generateError(errorData);
+                }
+
+                return response.data;
+            }
+            // 
+            //to make the 2nd api call in view_catalogue template
+
             async function updateOrganizationMembership(membershipId, data) {
                 const { backendAPI } = config;
                 let response = null;
@@ -1828,6 +1866,53 @@
                 }
 
                 return response.data;
+            }
+
+            async function saveBulkupdate(payload){
+                const { backendAPI } = config;
+
+                try {
+                    const response = await Axios.post(`${backendAPI}/save-tracked-bulk-update/data/data`, JSON.stringify(payload), {
+                        proxy: config.proxy,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    return response.data;
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
+            }
+
+            async function saveLabelCorrectorAttributeData(payload){
+                const { backendAPI } = config;
+
+                try {
+                    const response = await Axios.post(`${backendAPI}/save-label-corrector-attribute/data/data`, JSON.stringify(payload), {
+                        proxy: config.proxy,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    return response.data;
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
+            }
+            async function saveSrInvisibleLabelCorrectorAttributeData(payload){
+                const { backendAPI } = config;
+
+                try {
+                    const response = await Axios.post(`${backendAPI}/save-sr-invisible-frame-info/data/sr_visible`, JSON.stringify(payload), {
+                        proxy: config.proxy,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    return response.data;
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
             }
 
             Object.defineProperties(
@@ -1879,7 +1964,7 @@
                             delete: deleteTask,
                             exportDataset: exportDataset('tasks'),
                             export: exportTask,
-                            import: importTask,
+                            import: importTask,                           
                         }),
                         writable: false,
                     },
@@ -1890,7 +1975,12 @@
                             save: saveJob,
                             getcatalog:getSigns,
                             getPopulate:populateSigns,
+                            labelCorrectorImages:labelCorrectorImages,
+                            getCorrectorData:getCorrectorData,
                             getUpdate:getUpdate,
+                            saveBulkupdate:saveBulkupdate,
+                            saveLabelCorrectorAttributeData:saveLabelCorrectorAttributeData,
+                            saveSrInvisibleLabelCorrectorAttributeData:saveSrInvisibleLabelCorrectorAttributeData,
                         }),
                         writable: false,
                     },
